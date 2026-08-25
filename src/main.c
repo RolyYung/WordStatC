@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define PATH_MAX_LENGTH 10
+#define PATH_MAX_LENGTH 100 // 最大文件路径长度 100
+#define MAX_WORD_LEN 50 // 最大英文单词长度 50
 
 int is_alpha(int c){
     if(c >= 'a' && c <= 'z'){
@@ -18,7 +19,7 @@ int main(){
     printf("请输入文本路径:");
     char filePath[PATH_MAX_LENGTH];
     fgets(filePath, PATH_MAX_LENGTH, stdin);
-    int path_len = strlen(filePath);
+    size_t path_len = strlen(filePath);
     if(path_len == PATH_MAX_LENGTH - 1 && filePath[path_len - 1] != '\n'){
         printf("输入路径过长");
         return -1;
@@ -28,29 +29,49 @@ int main(){
     if (pFile!=NULL)
     {
         printf("fopen success, begin read file \n");
-        
-        int result = fgetc(pFile);
-        while (result != EOF)
+        char word[MAX_WORD_LEN + 1]; // +1 是用于最后保留'\0', 做结尾符.
+        int index = 0;
+        int ch = fgetc(pFile);
+        while (ch != EOF)
         {
-            if(is_alpha(result)){
-                printf("字符: %c \n", result);
-            }else{
-                printf("分隔符: %c \n", result);
+            if(index >= MAX_WORD_LEN){
+                printf("单词长度超过规定");
+                fclose(pFile);
+                return -1;
             }
-            result = fgetc(pFile);
+            if(is_alpha(ch)){
+                word[index] = ch;
+                ++index;
+            }else{
+                word[index] = '\0';
+                if(index > 0){
+                    printf("单词: %s \n", word);
+                }
+                printf("分隔符: %c \n", ch);
+                index = 0;
+            }
+            ch = fgetc(pFile);
         }
         if(feof(pFile)){
             printf("\n");
             printf("文件读取完成 \n");
         }
         if(ferror(pFile)){
+            printf("\n");
             printf("读取文件失败 \n");
             fclose(pFile);
             return -1;
         }
+        if(index > 0){
+            word[index] = '\0';
+            printf("单词: %s \n", word);
+            index = 0;
+        }
         fclose (pFile);
+        printf("\n");
         printf("读取文件操作完成 \n");
     }else{
+        printf("\n");
         printf("fopen fail");
     }
 
