@@ -18,7 +18,10 @@ int main(){
     // 提示用户输入文本文件路径
     printf("请输入文本路径:");
     char filePath[PATH_MAX_LENGTH];
-    fgets(filePath, PATH_MAX_LENGTH, stdin);
+    if(fgets(filePath, PATH_MAX_LENGTH, stdin) == NULL){
+        printf("读取文件失败");
+        return -1;
+    } 
     size_t path_len = strlen(filePath);
     if(path_len == PATH_MAX_LENGTH - 1 && filePath[path_len - 1] != '\n'){
         printf("输入路径过长");
@@ -34,12 +37,12 @@ int main(){
         int ch = fgetc(pFile);
         while (ch != EOF)
         {
-            if(index >= MAX_WORD_LEN){
-                printf("单词长度超过规定");
-                fclose(pFile);
-                return -1;
-            }
             if(is_alpha(ch)){
+                if(index == MAX_WORD_LEN){
+                    printf("单词长度超过规定");
+                    fclose(pFile);
+                    return -1;
+                }
                 word[index] = ch;
                 ++index;
             }else{
@@ -54,6 +57,11 @@ int main(){
         }
         if(feof(pFile)){
             printf("\n");
+            if(index > 0){
+                word[index] = '\0';
+                printf("单词: %s \n", word);
+                index = 0;
+            }
             printf("文件读取完成 \n");
         }
         if(ferror(pFile)){
@@ -61,11 +69,6 @@ int main(){
             printf("读取文件失败 \n");
             fclose(pFile);
             return -1;
-        }
-        if(index > 0){
-            word[index] = '\0';
-            printf("单词: %s \n", word);
-            index = 0;
         }
         fclose (pFile);
         printf("\n");
