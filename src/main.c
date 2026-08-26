@@ -7,6 +7,8 @@
 int to_lower(char ch);
 int is_alpha(int c);
 
+
+
 int main(){
     // 提示用户输入文本文件路径
     printf("请输入文本路径:");
@@ -24,6 +26,7 @@ int main(){
     FILE * pFile = fopen(filePath, "r");
     if (pFile!=NULL)
     {
+        int word_total = 0;
         printf("fopen success, begin read file \n");
         char word[MAX_WORD_LEN + 1]; // +1 是用于最后保留'\0', 做结尾符.
         int index = 0;
@@ -42,6 +45,7 @@ int main(){
                 word[index] = '\0';
                 if(index > 0){
                     printf("单词: %s \n", word);
+                    ++word_total;
                 }
                 printf("分隔符: %c \n", ch);
                 index = 0;
@@ -53,6 +57,7 @@ int main(){
             if(index > 0){
                 word[index] = '\0';
                 printf("单词: %s \n", word);
+                ++word_total;
                 index = 0;
             }
             printf("文件读取完成 \n");
@@ -65,6 +70,7 @@ int main(){
         }
         fclose (pFile);
         printf("\n");
+        printf("当前文件的单词个数: %d \n", word_total);
         printf("读取文件操作完成 \n");
     }else{
         printf("\n");
