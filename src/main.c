@@ -4,15 +4,8 @@
 #define PATH_MAX_LENGTH 100 // 最大文件路径长度 100
 #define MAX_WORD_LEN 50 // 最大英文单词长度 50
 
-int is_alpha(int c){
-    if(c >= 'a' && c <= 'z'){
-        return 1;
-    }
-    if(c >= 'A' && c <= 'Z'){
-        return 1;
-    }
-    return 0;
-}
+int to_lower(char ch);
+int is_alpha(int c);
 
 int main(){
     // 提示用户输入文本文件路径
@@ -43,7 +36,7 @@ int main(){
                     fclose(pFile);
                     return -1;
                 }
-                word[index] = ch;
+                word[index] = to_lower(ch);
                 ++index;
             }else{
                 word[index] = '\0';
@@ -79,4 +72,23 @@ int main(){
     }
 
     return 0;
+}
+
+int is_alpha(int c){
+    if(c >= 'a' && c <= 'z'){
+        return 1;
+    }
+    if(c >= 'A' && c <= 'Z'){
+        return 1;
+    }
+    return 0;
+}
+
+int to_lower(char ch){
+    if(ch >= 'A' && ch <= 'Z'){
+        return 'a' + (ch - 'A');
+    }else if(ch >= 'a' && ch <= 'z'){
+        return ch;
+    }
+    return -1;
 }
