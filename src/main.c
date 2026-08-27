@@ -3,10 +3,20 @@
 
 #define PATH_MAX_LENGTH 100 // 最大文件路径长度 100
 #define MAX_WORD_LEN 50 // 最大英文单词长度 50
+#define MAX_UNIQUE_WORD 1000 // 最多统计 1000 个不同单词
+
+typedef struct WordStatNode{
+    char word[MAX_WORD_LEN + 1];
+    int count;
+}Word;
+
+Word word_stat_arr[MAX_UNIQUE_WORD];
+int word_stat_index = 0;
 
 int to_lower(char ch);
 int is_alpha(int c);
 
+int stat_word_func(const char * str);
 
 
 int main(){
@@ -45,6 +55,12 @@ int main(){
                 word[index] = '\0';
                 if(index > 0){
                     printf("单词: %s \n", word);
+                    int ret = stat_word_func(word);
+                    if(ret == -1){
+                        printf("不同单词数量超过上限");
+                        fclose(pFile);
+                        return -1;
+                    }
                     ++word_total;
                 }
                 printf("分隔符: %c \n", ch);
@@ -57,6 +73,12 @@ int main(){
             if(index > 0){
                 word[index] = '\0';
                 printf("单词: %s \n", word);
+                int ret = stat_word_func(word);
+                if(ret == -1){
+                    printf("不同单词数量超过上限");
+                    fclose(pFile);
+                    return -1;
+                }
                 ++word_total;
                 index = 0;
             }
@@ -71,7 +93,14 @@ int main(){
         fclose (pFile);
         printf("\n");
         printf("当前文件的单词个数: %d \n", word_total);
+        printf("不同单词数：%d \n", word_stat_index);
         printf("读取文件操作完成 \n");
+        for (int i = 0; i < word_stat_index; i++)
+        {
+            Word node = word_stat_arr[i];
+            printf("单词: %s, 出现次数: %d \n", node.word, node.count);
+        }
+        
     }else{
         printf("\n");
         printf("fopen fail");
@@ -97,4 +126,29 @@ int to_lower(char ch){
         return ch;
     }
     return -1;
+}
+
+int stat_word_func(const char * str){
+    if(word_stat_index == 0){
+        word_stat_arr[word_stat_index].count = 1;
+        strcpy(word_stat_arr[word_stat_index].word, str);
+        word_stat_index++;
+    }else{
+        for (int i = 0; i < word_stat_index; i++)
+        {
+            Word * temp = &word_stat_arr[i];
+            if(strcmp(temp->word, str) == 0){
+                temp->count++;
+                return 0;
+            }
+        }
+        if(word_stat_index == MAX_UNIQUE_WORD){
+            return -1;
+        }
+        word_stat_arr[word_stat_index].count = 1;
+        strcpy(word_stat_arr[word_stat_index].word, str);
+        word_stat_index++;
+    }
+    
+    return 0;
 }
