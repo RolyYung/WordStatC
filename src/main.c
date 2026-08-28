@@ -19,6 +19,7 @@ int is_alpha(int c);
 
 int stat_word_func(const char * str);
 void print_word_stats(void);
+void sort_words(void);
 
 
 int main(){
@@ -95,6 +96,7 @@ int main(){
         fclose (pFile);
         printf("\n");
         printf("读取文件操作完成 \n");
+        sort_words();
         print_word_stats();
         
     }else{
@@ -147,6 +149,39 @@ int stat_word_func(const char * str){
     }
     
     return 0;
+}
+
+void sort_words(void){
+    if(word_stat_index == 0){
+        return ;
+    }
+    int p = 0;
+    int end = word_stat_index;
+
+    // 冒泡排序
+    while (p != end)    
+    {
+        while (p != end -1)
+        {
+            if(word_stat_arr[p].count < word_stat_arr[p+1].count){
+                Word temp = word_stat_arr[p];
+                word_stat_arr[p] = word_stat_arr[p+1];
+                word_stat_arr[p+1] = temp;
+            }
+            // 同次数按字母排序
+            if(word_stat_arr[p].count == word_stat_arr[p+1].count){
+                if(strcmp(word_stat_arr[p].word, word_stat_arr[p+1].word)>0 ){
+                    Word temp = word_stat_arr[p];
+                    word_stat_arr[p] = word_stat_arr[p+1];
+                    word_stat_arr[p+1] = temp;
+                }
+            }
+            ++p;
+        }
+        end = p;
+        p = 0;
+    }
+    return ;
 }
 
 // 打印单词统计
