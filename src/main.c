@@ -11,12 +11,14 @@ typedef struct WordStatNode{
 }Word;
 
 Word word_stat_arr[MAX_UNIQUE_WORD];
-int word_stat_index = 0;
+static int word_stat_index = 0;
+static int word_total = 0;
 
 int to_lower(char ch);
 int is_alpha(int c);
 
 int stat_word_func(const char * str);
+void print_word_stats(void);
 
 
 int main(){
@@ -36,7 +38,7 @@ int main(){
     FILE * pFile = fopen(filePath, "r");
     if (pFile!=NULL)
     {
-        int word_total = 0;
+        
         printf("fopen success, begin read file \n");
         char word[MAX_WORD_LEN + 1]; // +1 是用于最后保留'\0', 做结尾符.
         int index = 0;
@@ -92,14 +94,8 @@ int main(){
         }
         fclose (pFile);
         printf("\n");
-        printf("当前文件的单词个数: %d \n", word_total);
-        printf("不同单词数：%d \n", word_stat_index);
         printf("读取文件操作完成 \n");
-        for (int i = 0; i < word_stat_index; i++)
-        {
-            Word node = word_stat_arr[i];
-            printf("单词: %s, 出现次数: %d \n", node.word, node.count);
-        }
+        print_word_stats();
         
     }else{
         printf("\n");
@@ -151,4 +147,24 @@ int stat_word_func(const char * str){
     }
     
     return 0;
+}
+
+// 打印单词统计
+void print_word_stats(void){
+    if(word_total == 0){
+        printf("文件为空, 没有单词");
+        return ;
+    }
+    printf("当前文件的单词个数: %d \n", word_total);
+    printf("不同单词数：%d \n", word_stat_index);
+    for (int i = 0; i < word_stat_index; i++)
+    {
+        Word word = word_stat_arr[i];
+        float frequency = (float)word.count / word_total;
+        printf("单词: %s, 出现次数: %d \n", word.word, word.count);
+        printf("单词: %s, 频率: %.4f \n", word.word, frequency);
+    }
+    
+    
+    return ;
 }
