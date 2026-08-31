@@ -151,6 +151,13 @@ int stat_word_func(const char * str){
     return 0;
 }
 
+int need_swap(Word a, Word b) {
+    if (a.count != b.count) {
+        return a.count < b.count; // 次数小的排后面
+    }
+    return strcmp(a.word, b.word) > 0; // 次数相同时，字典序大的排后面
+}
+
 void sort_words(void){
     if(word_stat_index == 0){
         return ;
@@ -163,18 +170,10 @@ void sort_words(void){
     {
         while (p != end -1)
         {
-            if(word_stat_arr[p].count < word_stat_arr[p+1].count){
+            if(need_swap(word_stat_arr[p], word_stat_arr[p+1])){
                 Word temp = word_stat_arr[p];
                 word_stat_arr[p] = word_stat_arr[p+1];
                 word_stat_arr[p+1] = temp;
-            }
-            // 同次数按字母排序
-            if(word_stat_arr[p].count == word_stat_arr[p+1].count){
-                if(strcmp(word_stat_arr[p].word, word_stat_arr[p+1].word)>0 ){
-                    Word temp = word_stat_arr[p];
-                    word_stat_arr[p] = word_stat_arr[p+1];
-                    word_stat_arr[p+1] = temp;
-                }
             }
             ++p;
         }
