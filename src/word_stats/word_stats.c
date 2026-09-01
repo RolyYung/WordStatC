@@ -25,7 +25,7 @@ int stat_word_func(const char * str){
             }
         }
         if(word_stats.index == MAX_UNIQUE_WORD){
-            printf("不同单词数量超过上限");
+            printf("不同单词数量超过上限 \n");
             return -1;
         }
         word_stats.word_arr[word_stats.index].count = 1;
