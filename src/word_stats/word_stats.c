@@ -96,9 +96,9 @@ int get_top_number(void){
     scanf("%d", &top_word_number);
     if(is_correct_top_word_number()){
         print_word_stats();
-        return 1;
-    }else{
         return 0;
+    }else{
+        return 1;
     }
 }
 
