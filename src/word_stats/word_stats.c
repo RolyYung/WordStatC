@@ -6,6 +6,9 @@ WordStats word_stats = {0};
 static int top_word_number = 0; // 统计的前N个单词. 由用户输入
 
 int stat_word_func(const char * str){
+    if(strlen(str) == 0){
+        return 0;
+    }
     word_stats.total++;
     if(word_stats.index == 0){
         word_stats.word_arr[word_stats.index].count = 1;
@@ -22,6 +25,7 @@ int stat_word_func(const char * str){
             }
         }
         if(word_stats.index == MAX_UNIQUE_WORD){
+            printf("不同单词数量超过上限");
             return -1;
         }
         word_stats.word_arr[word_stats.index].count = 1;
@@ -119,7 +123,7 @@ int is_correct_top_word_number(void){
 
 int is_empty_word_file(){
     if(word_stats.total == 0){
-        printf("文件中没有可识别的单词 by: empty_word_file\n ");
+        printf("文件中没有可识别的单词 \n ");
         return 1;
     }
     return 0;
