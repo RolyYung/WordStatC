@@ -79,7 +79,8 @@ void print_word_stats(void){
         printf("🗒️ \n单词: %s, 出现次数: %d, 频率: %.4f \n", word.word, word.count, frequency);
     }
     
-    
+    printf("\n");
+    printf("=====单词统计展示完毕======");
     return ;
 }
 
