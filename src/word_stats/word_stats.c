@@ -2,7 +2,7 @@
 #include <string.h>
 #include "word_stats.h"
 
-WordStats word_stats = {0};
+static WordStats word_stats = {0};
 static int top_word_number = 0; // 统计的前N个单词. 由用户输入
 
 int stat_word_func(const char * str){
